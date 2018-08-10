@@ -3,7 +3,6 @@
 // window.open("http://baidu.com",'_self') 
 // alert(localStorage['name']); 
 
-
 var mydiv = document.getElementById('imageBlock_feature_div');
 var imgs = [];
 if (mydiv != undefined) {
@@ -88,12 +87,14 @@ if (store_name.length>0) {
 	for (var i = 0; i < page_all_ul.length; i++) {
 		var page_a = page_all_ul[i];
 		var store_span = page_a.getElementsByClassName('a-size-small a-color-secondary')[1];
-		var store_span_name = store_span.innerText;
-		console.log(store_span_name);
-		if (store_name == store_span_name) {
-			isfind = true;
-			number = i;
-			break;
+		if (store_span != undefined) {
+			var store_span_name = store_span.innerText;
+			console.log(store_span_name);
+			if (store_name == store_span_name) {
+				isfind = true;
+				number = i;
+				break;
+			}
 		}
 	}
 
