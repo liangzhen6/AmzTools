@@ -2,18 +2,18 @@
 //imageBlock_feature_div
 // window.open("http://baidu.com",'_self') 
 // alert(localStorage['name']); 
-
 var mydiv = document.getElementById('imageBlock_feature_div');
 var imgs = [];
 if (mydiv != undefined) {
-	// 处理剥离数据
-	var scr = mydiv.getElementsByTagName('script') 
+	// 处理剥离数据 
+	// var scr = mydiv.getElementsByTagName('script');
+	var scr = mydiv.childNodes;
 	if (scr.length > 0) {
 		// 创建FileSystemObject对象实例 
         // window.open("https://images-na.ssl-images-amazon.com/images/I/613-CQeqZML._UL1500_.jpg");
 		// var fso = new ActiveXObject("Scripting.FileSystemObject");
 		// fso.CreateFolder("Desktop:\\Bogus");
-		var data = scr[1];
+		var data = scr[3];
 		console.log(data);
 		var dataStr = data.innerHTML;
 		var re = /\'colorImages\':(.+?)}]}/;
@@ -81,28 +81,38 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
  // sendResponse('我已收到你的消息：' +JSON.stringify(request));//做出回应
 });
 
-if (store_name.length>0) {
-	var page_all_ul = document.getElementById('s-results-list-atf').childNodes;
-	var isfind = false;
-	for (var i = 0; i < page_all_ul.length; i++) {
-		var page_a = page_all_ul[i];
-		var store_span = page_a.getElementsByClassName('a-size-small a-color-secondary')[1];
-		if (store_span != undefined) {
-			var store_span_name = store_span.innerText;
-			console.log(store_span_name);
-			if (store_name == store_span_name) {
-				isfind = true;
-				number = i;
-				break;
+
+if (store_name.length>0 && store_name != 'undefined') {
+	if (document.getElementById('s-results-list-atf') != undefined) {
+		// 数据存在在可以
+		var page_all_ul = document.getElementById('s-results-list-atf').childNodes;
+		var isfind = false;
+		for (var i = 0; i < page_all_ul.length; i++) {
+			var page_a = page_all_ul[i];
+			// var store_span = page_a.getElementsByClassName('a-size-small a-color-secondary')[1];  a-size-base s-inline  s-access-title  a-text-normal
+			var store_span = page_a.getElementsByClassName('a-size-base s-inline  s-access-title  a-text-normal')[0];
+			if (store_span == undefined) {
+				// a-size-medium s-inline  s-access-title  a-text-normal
+				store_span = page_a.getElementsByClassName('a-size-medium s-inline  s-access-title  a-text-normal')[0];
+			}
+
+			if (store_span != undefined) {
+				var store_span_name = store_span.innerText;
+				console.log(store_span_name);
+				if (store_span_name.search(store_name) != -1) {
+					isfind = true;
+					number = i;
+					break;
+				}
 			}
 		}
-	}
 
-	if (isfind) {
-		alert(number+1);
-	} else {
-	//如果没有找到继续找
-		window.next_page();
+		if (isfind) {
+			alert(number+1);
+		} else {
+		//如果没有找到继续找
+			window.next_page();
+		}
 	}
 }
 
